@@ -2,7 +2,7 @@
 
 Modelo para aplicação utilizando nzord. 
 Inclue modulo: 
-   - System , Obrigátorio para funcionamento.
+   - System , Obrigatório para funcionamento.
 
 ##### Instalação 
 
@@ -10,7 +10,7 @@ Faça o clone do projeto
 
 ```bash
 
-$ git clone https://github.com/coderlrv/nzord-skeleton.git
+$ git clone https://github.com/coderlrv/nzord-skeleton.git nomeprojeto
 
 ```
 
@@ -38,7 +38,7 @@ Definir a permissão de gravação para as pastas `base/tmp` e` files` ao implan
 * `base`: Código de aplicação
 * `files`: Diretório gravável dos arquivos jpg, png, pdf, bmp...
 * `modulos`: Todos os modulos utilizados pelo sistema
-    - `system`: Módulo obrigatório para funcionamento do nzord. Inclue gerenciamento de Usuários,Logs,Relatórios,Setor,Organização, Paramentros entre outros..
+    - `system`: Módulo obrigatório para funcionamento do nzord. Inclue gerenciamento de Usuários,Logs,Relatórios,Setor,Organização,Paramentros entre outros..
 * `public`: Raiz do webserver
 * `vendor`: Composer dependências
 
@@ -46,21 +46,25 @@ Definir a permissão de gravação para as pastas `base/tmp` e` files` ao implan
 ##### Twig
 - Funções  Ex: `{{ dataExtenso(datas.data) }}`
     * `dataExtenso()` - Transforma data em data escrita.
+    
     ```twig
         {{ dataExtenso('1969-12-31') }}
         //Result: 31 de dezembro de 1969
     ```
     * `valorPorExtenso()` - Transforma valor em valor escrito.
+    
     ```twig
         {{ valorPorExtenso(52.00) }}
         //Result:  cinquenta e dois reais 
     ```
-    * Gera link para modulo  `path_for_model()` -
+    * Gera link para modulo  `path_for_model()`
+    
     ```twig
         {{ path_for_model('meu-modulo','meu-controller','index', [12],['filtro'=>1]) }}  - Gera link
         //Result: http://localhost/nzord/app/meu-modulo/meu-controller/index/12&filtro=1
     ```
-    *  Gera link Modal `path_for_modal()` - 
+    *  Gera link Modal `path_for_modal()`
+      
         ```twig
             {{ path_for_modal('meu-modulo','meu-controller','index', [12],['filtro'=>1]) }}  - Gera link para modal
            //Result: http://localhost/nzord/modal?p=app/meu-modulo/meu-controller/index/12&filtro=1
@@ -89,5 +93,7 @@ Definir a permissão de gravação para as pastas `base/tmp` e` files` ao implan
 
 * Executar testes
 ```bash
+
 $ composer test
+
 ```
