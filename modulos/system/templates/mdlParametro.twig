@@ -1,0 +1,46 @@
+{% extends "modal.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block mContent %}
+{% if act == 'form' %}
+{% from 'base/forms.twig' import input as input_field, hidden, textarea, select, button, datetime %}
+<div class="col-xs-12 well">
+    <form class="form" id="mform" name="mform" method="POST" action="{{ base_url() }}/app/system/parametro/save">
+    	{% if dados.param.id != null %}
+       		{{ hidden('id', dados.param.id) }}
+       {% endif %}
+    	
+    	{{ input_field('nome', 'Nome: ',  dados.param.nome, 'Nome', null ,3,{'required':true} ) }}  
+    	{{ input_field('descricao', 'Descrição: ',  dados.param.descricao, 'Descrição', null ,6,{'required':true} ) }}  
+    	{{ select('status', 'Status: ', dados.param.status, dados.status, null, 1, {'include_blank':true,'required':true} ) }}  
+    	     
+        {{ textarea('valor', 'Valor:', dados.param.valor , 'Descrição ', 4, null, 11 , {'required':true} ) }}
+            
+        {{ button(1) }}
+    </form>
+</div>
+{% elseif act == 'det' %}
+	<div class="well col-xs-12">
+    	<div class="col-xs-8 bg-default"><b>Nome: </b> {{ dados.param.nome }} </div>
+    	<div class="col-xs-4 bg-default"><b>Status: </b> {{  dados.param.status|replace({1: 'Ativo', 0: 'Inativo'}) }}</div>
+    	<div class="col-xs-12 bg-default"><b>Descrição: </b> {{ dados.param.descricao|convert_encoding('latin1', 'UTF-8')|raw  }} </div>
+    	<div class="col-xs-12 bg-info"><b>Valor: </b><br>{{ dados.param.valor|convert_encoding('latin1', 'UTF-8')|raw }} </div>
+	</div>
+{% endif %}
+
+{% endblock %}
+
+{% block mScript %} 
+{% if act == 'form' %}
+<script type="text/javascript">
+$('#mform').submit(function(e){
+	e.preventDefault();
+	$('button[type=submit]', this).attr('disabled', 'disabled');
+	jqSaveModal('mform','{{ base_url() }}/app/system/parametro/save','mdlParametro');
+});
+</script>
+
+{% endif %}
+
+{% endblock %}
+

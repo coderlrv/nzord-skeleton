@@ -1,0 +1,59 @@
+{% extends "modal.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block mContent %} 
+
+{% if act == 'form' %}
+{% from 'base/forms.twig' import input as input_field, hidden, textarea, select, button, datetime %}
+
+<div class="col-xs-12 well">
+    <form class="form" id="mform" name="mform" method="POST">
+        {% if dados.pessoa.id != null %}
+       		{{ hidden('id', dados.pessoa.id) }}
+   		{% else %}
+   			{{ hidden('user_id', session.app.user) }}
+   			{{ hidden('ip_user', session.app.remoteIp) }}
+   			{{ hidden('criado', now|date('Y-m-d H:i:s')) }}
+        {% endif %}
+        {{ input_field(null, 'ID:', dados.pessoa.id, null, null ,1,{'readonly':true} ) }}                            
+        {{ input_field('matricula', 'Mat.: ', dados.pessoa.matricula, 'matricula', null ,1,{'required':false} ) }}        
+        {{ input_field('nome', 'Nome: ', dados.pessoa.nome, 'Nome', null ,4,{'required':true} ) }}
+		{{ input_field('fantasia', 'Fantasia: ', dados.pessoa.fantasia, 'fantasia', null ,2,{'required':false} ) }}		
+		{{ input_field('cpf_cnpj', 'Cpf/Cnpj: ', dados.pessoa.cpf_cnpj, 'cpf_cnpj', null ,2,{'required':true,'valide':'cnpjOrCpf'} ) }}
+		{{ select('ecivil', 'E.Civil: ', dados.pessoa.ecivil, dados.ecivil, null, 2, {'include_blank':true,'required':true} ) }}
+		{{ input_field('documento', 'Documento: ', dados.pessoa.documento, 'documento', null ,2,{'required':false} ) }}
+		{{ datetime('data_nasc','Data Nasc:',dados.pessoa.data_nasc | date('d/m/Y'),null,null,2,{'required':true,'format':'DD/MM/YYYY'}) }}			
+		{{ input_field('mail', 'E-mail: ', dados.pessoa.mail,null, null ,4,{'required':false} ) }}	
+		{{ input_field('telefone', 'telefone: ', dados.pessoa.telefone, '(65)99999-9999', null ,2,{'required':false} ) }}	
+		{{ input_field('celular', 'Celular: ', dados.pessoa.celular, '(65)99999-9999', null ,2,{'required':false} ) }} 
+			
+        {{ select('func', 'Func.: ', dados.pessoa.func, dados.func, null, 1, {'include_blank':true,'required':true} ) }}  
+        {{ select('status', 'Status: ', dados.pessoa.status, dados.status, null, 1, {'include_blank':true,'required':true} ) }}                  
+  		
+        {{ button() }}
+    </form>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block mScript %}
+
+{% if act == 'form' %}
+<script>
+jQuery(document).ready(function() {
+	jQuery('#nome').keyup(function() {
+		$(this).val($(this).val().toUpperCase());
+	});
+});
+$('#mform').submit(function(e){
+	e.preventDefault();
+    $('button[type=submit]', this).attr('disabled', 'disabled');
+	jqSaveModal('mform','{{ base_url() }}/app/system/pessoa/save','mdlPessoa');
+});
+</script>
+{% endif %}
+
+{% endblock %}
+
+

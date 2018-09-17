@@ -1,0 +1,106 @@
+{% extends "modal.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block mContent %} 
+    {% if act == 'form' %}
+        {% from 'base/forms.twig' import input as input_field, hidden, textarea, select, button, datetime %}
+        
+        <div class="col-xs-12 well">
+            <form class="form" id="mform" name="mform" method="POST">
+                {% if dados.modulo.id != null %}
+               		{{ hidden('id', dados.modulo.id) }}
+                {% endif %}
+                {{ input_field(null, 'ID:', dados.modulo.id, null, null ,1,{'readonly':true} ) }}
+                {{ input_field('nome', 'Nome: ', dados.modulo.nome, 'Nome do Modulo', null ,3,{'required':true} ) }}
+                {{ input_field('detalhe', 'Detalhe: ', dados.modulo.detalhe, null, null ,7,{'required':false} ) }}
+                
+                <div id="menu" class="col-xs-12 bg-info" style='overflow:auto;max-height:30vh;'>
+  		    	    <div class="form-group col-xs-2"><label>Label:</label> </div>  		    	    
+  		    	    <div class="form-group col-xs-2"><label class="control-label">Href:</label> </div>  		    	    
+  		    	    <div class="form-group col-xs-2"><label class="control-label">Link:</label> </div>  		    	    
+  		    	    <div class="form-group col-xs-2"><label class="control-label">Title:</label> </div>  		    	    
+  		    	    <div class="form-group col-xs-1"><label class="control-label">Image:</label> </div>  		    	    
+  		    	    <div class="form-group col-xs-2"><label class="control-label">Style:</label> </div>  		    	    
+          		    <a class="btn btn-sm btn-default" title="Adicionar Menu" onclick="addMenu()"><i class="fa fa-plus"></i></a>
+            	{% set rowNum = 0 %}  
+                {% for row in dados.modulo.menu %}  
+                	{% set rowNum = row.id %}              
+                    <div class="col-xs-12" id="menu_{{ row.id }}">                    
+                    	{{ hidden('menu['~row.id~'][id]', row.id) }}
+              		    {{ input_field('menu['~row.id~'][label]', null, row.label, 'label', null ,2,{'required':true} ) }}
+              		    {{ input_field('menu['~row.id~'][href]', null, row.href, 'href', null ,2,{'required':false} ) }}
+              		    {{ input_field('menu['~row.id~'][link]', null, row.link, 'link', null ,2,{'required':false} ) }}
+              		    {{ input_field('menu['~row.id~'][title]', null, row.title, 'title', null ,2,{'required':false} ) }}
+              		    {{ input_field('menu['~row.id~'][img]', null, row.img, 'img', null ,1,{'required':true} ) }}
+              		    {{ input_field('menu['~row.id~'][style]', null, row.style, 'style', null ,2,{'required':false} ) }}   
+              		    <a class="btn btn-sm btn-warning" title="Excluir Menu" onclick="deleteMenu({{ row.id }})"><i class="fa fa-remove"></i></a>       		    
+            		</div>
+                {% endfor %}
+                {{ hidden('rowNum', rowNum) }}
+            	</div>
+          		
+                {{ button() }}
+            </form>
+        </div>
+        <div style="display:none;" id="newRow">
+        	<div class="col-xs-12" id="menu_{ROW}">
+        		<input class="form-control" type="hidden" name="menu[{ROW}][id]" value="{ROW}">            
+                <div class="form-group col-xs-2">            
+                	<input class="form-control" type="text"name="menu[{ROW}][label]" placeholder="label" required="">            
+                </div>
+            	<div class="form-group col-xs-2">
+                    <input class="form-control" type="text" name="menu[{ROW}][href]" placeholder="href" >
+                </div>
+				<div class="form-group col-xs-2">
+            		<input class="form-control" type="text" name="menu[{ROW}][link]" placeholder="link">
+            	</div>
+            	<div class="form-group col-xs-2">
+                	<input class="form-control" type="text" name="menu[{ROW}][title]" placeholder="title" >
+                </div>
+            	<div class="form-group col-xs-1">
+                	<input class="form-control" type="text" name="menu[{ROW}][img]" placeholder="img" required="">
+            	</div>
+              	<div class="form-group col-xs-2">
+            		<input class="form-control" type="text" name="menu[{ROW}][style]" placeholder="style" >
+            	</div>
+            	    <a class="btn btn-sm btn-warning" title="Excluir Menu" onclick="deleteMenu({ROW})"><i class="fa fa-remove"></i></a>       		    
+            </div>
+        </div>
+        <div class="col-xs-12 content margin-bottom-10" style="overflow:auto; height:20vh;">  
+            {% from 'base/grid.twig' import grid %}
+            {{ grid('mdlGrid',dados.gride,true,{},[{'class':'btn-danger','label':'<i class="fa fa-pencil"></i>','action':'editReg','title':'Editar Registro'}]) }}	
+        </div>    
+    {% endif %}    
+{% endblock %}
+
+{% block mScript %}
+    {% if act == 'form' %}
+    <script>
+        $('#dtb_mdlGrid').on('editReg',function(e,row){
+            loadDetailBoxJs('mdlConfig','{{ currentUrl }}/'+row.id);
+        });
+        $('#mform').submit(function(e){
+        	e.preventDefault();
+            $('button[type=submit]', this).attr('disabled', 'disabled');
+        	jqSaveModal('mform','{{ base_url() }}/app/system/config/saveModulo',null);
+            $(this).on('afterSubmit',function(response){
+                loadDetailBoxJs('mdlConfig','{{ dados.url }}');
+            });
+        });        
+        function deleteMenu(id){
+            if (confirm('Deseja realmente remover esse Menu?')) {
+                $('div #menu_'+id).remove();
+            }
+        }
+        function addMenu(){
+        	var row = $('#rowNum').val();
+        	var widget = $('#newRow').html();      	
+        	row++;
+        	widget = widget.split(new RegExp('{ROW}', 'i')).join(row);
+        	$('div #menu').append(widget);
+        	$('#rowNum').val(row);
+        }
+    </script>
+    {% endif %}
+{% endblock %}
+

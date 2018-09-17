@@ -1,0 +1,94 @@
+{% extends "layout.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+{% block content %}      
+     <div class="col-xs-12 well">
+     <div class="col-xs-12 dataTable_wrapper">
+     	{% if sessao %}
+        <table id="tabela" class="table table-striped table-bordered table-hover table-responsive" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>DATA</th>
+                    <th>TELA</th>
+                    <th>SES</th>
+                    <th>LOCAL</th>
+                    <th>PERFIL</th>
+                    <th>NOME</th>
+                    <th>LOGIN</th>
+                    <th>IP</th>
+                    <th>BROWSER</th>
+                    <th>URL</th>
+                    <th>STATUS</th>                    
+                    <th>AÇÃO</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in sessao %}
+                    <tr>
+                        <td>{{ row.id }}</td>                  
+                        <td>{{ row.data_logon|date('d/m/Y H:i') }}</td>
+                        <td>{{ row.tipo }}</td>
+                        <td>{{ row.ses }}</td>
+                        <td>{{ row.local }}</td>
+                        <td>{{ row.perfil }}</td>
+                        <td>{{ row.nome }}</td>
+                        <td>{{ row.login }}</td>
+                        <td>{{ row.remo_ip }}</td>
+                        <td>{{ row.browser }}</td>                        
+                        <td>{{ row.url }}</td>                        
+                        <td>{{ row.status|raw }}</td>
+                        <td class="btn-acoes pull-right">
+                            <a class="btn btn-xs btn-warning" onclick="finalizaSes({{ row.id }})" title="Finalizar"><i class="fa fa-remove"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+           	<div class="alert alert-danger"><b>Sem Dados para Mostrar!</b></div>
+        {% endif %}
+    </div>
+    </div>     
+{% endblock %}
+
+{% block scripts %}
+{% if sessao %}
+<link rel="stylesheet" type="text/css" href="{{ base_url() }}/libs/datatables/datatables.min.css"/>	 
+<script type="text/javascript" src="{{ base_url() }}/libs/datatables/datatables.min.js"></script>    
+<script>
+$(document).ready(function() {
+    var table = $('#tabela').DataTable({
+        "language": {
+            "url": "{{ base_url() }}/libs/datatables/i18n/pt_BR.json"
+        },
+        "dom": 'Bfrtip',
+        "select": true,
+        "responsive": true,
+        "lengthMenu": [[10, 20, 50, 100, 250, 500, 1000, -1], ['10 linhas', '20 linhas', '50 linhas', '100 linhas', '250 linhas', '500 linhas', '1000 linhas', 'Todas']],		        
+        "buttons": [
+              { text: '<b>Res. Acesso</b>', action: function ( e, dt, node, config ) { detAcesso(); } }
+            , { text: '<b>Fin. Sessões</b>', action: function ( e, dt, node, config ) { geralFinal(); } }
+        	, { extend: 'copy', text: '<u>C</u>opiar',key: { key: 'c', altKey: true} }
+            , 'csv', 'excel', 'pdf'
+            , { extend: 'print', text: '<u>I</u>mprimir',key: { key: 'i', altKey: true} }
+            , { extend: 'colvis', text: '<u>V</u>isivel',key: { key: 'v', altKey: true} }
+            , { extend: 'pageLength', text: 'Registros' }
+        ]
+    });
+});
+</script>
+{% endif %}
+<script>
+setInterval(" location.reload(); ", 300000);
+
+function detAcesso(){
+	sysModalBoxJs('Visualizar Resumo dos Acesso','app/system/sessao/detAcesso',false,'warning');
+}
+function finalizaSes(id){
+	sysModalBoxJs('Finalizar Sessão','app/system/sessao/del/'+id,false,'warning');
+}
+function geralFinal(){
+	sysModalBoxJs('Finalizar as Sessões','app/system/sessao/geralFinalSessao',false,'success');
+}
+</script>
+{% endblock %}

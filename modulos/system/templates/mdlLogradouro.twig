@@ -1,0 +1,47 @@
+{% extends "modal.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block mContent %} 
+
+{% if act == 'form' %}
+{% from 'base/forms.twig' import input as input_field, hidden, textarea, select, button, datetime %}
+
+<div class="col-xs-12 well">
+    <form class="form" id="mform" name="mform" method="POST">
+        {% if dados.lograd.id != null %}
+       		{{ hidden('id', dados.lograd.id) }}
+        {% endif %}
+        {{ input_field(null, 'ID:', dados.lograd.id, null, null ,1,{'readonly':true} ) }}
+        {{ input_field('prefixo', 'Prefixo: ', dados.lograd.prefixo, 'Rua/AV.', null ,1,{'required':true,'mlenght':4} ) }}
+        {{ input_field('nome', 'Nome: ', dados.lograd.nome, 'Descrição', null ,4,{'required':true,'mlenght':100} ) }}
+        {{ input_field('cod_pref', 'Cod. Pref: ', dados.lograd.cod_pref, null, null ,1,{'required':false,'mlenght':6} ) }}
+        {{ input_field('cod_saae', 'Cod. SAAE: ', dados.lograd.cod_saae, null, null ,1,{'required':false,'mlenght':6} ) }}                   
+		{{ select('status', 'Status: ', dados.lograd.status, dados.status, null, 1, {'include_blank':true,'required':true} ) }}		
+  		
+        {{ button() }}
+    </form>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block mScript %}
+
+{% if act == 'form' %}
+<script>
+jQuery(document).ready(function() {
+	jQuery('#prefixo').keyup(function() {
+		$(this).val($(this).val().toUpperCase());
+	});
+});
+$('#mform').submit(function(e){
+	e.preventDefault();
+    $('button[type=submit]', this).attr('disabled', 'disabled');
+	jqSaveModal('mform','{{ base_url() }}/app/system/logradouro/save','mdlLograd');
+});
+</script>
+{% endif %}
+
+{% endblock %}
+
+

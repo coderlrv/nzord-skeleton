@@ -1,0 +1,27 @@
+{% extends "layout.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+{% block content %}  
+
+<section>  
+  <header>
+    <h3>Resultados para <kbd>{{ termo }}</kbd></h3>
+  </header>  
+  <ol>
+  {% for row in dados %}
+    <li>
+      	<h4>
+      		<a href="{{ row.url }}" title="{{ row.title|convert_encoding('latin1', 'UTF-8')|raw }}"> 
+      			{{ row.label|convert_encoding('latin1', 'UTF-8')|raw }}
+  			 	<span class="text-muted small"> - {{ row.detalhe }}</span>
+  			 </a>
+		 </h4>
+    </li>    
+    {% endfor %}
+  </ol>  
+</section>
+        
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

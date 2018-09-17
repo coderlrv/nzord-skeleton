@@ -1,0 +1,43 @@
+{% extends "layout.html.twig" %}
+{% from 'base/forms.twig' import input as input_field, textarea, select, button %}
+{% from 'base/grid.twig' import grid %}
+
+{% block page_title %}
+    <h1 title="Logradouro">
+    	<i class="fa fa-road"></i> Logradouro
+    	{% if not pageDescri is empty  %}
+    	<small>{{pageDescri}}</small>
+    	{% endif %}
+    </h1>
+{% endblock %}
+
+{% block content %}
+{{ input_field('psq_id', null, null, 'id do Feriado', null ,1 ) }}
+{{ grid( 'tabela', lograd,true ) }}
+
+<menu id="html5menu" style="display: none" type="context">
+	<command label="Editar" icon="fa-pencil" onclick="getEdit()"></command>
+</menu>
+{% endblock %}
+
+{% block scripts %}
+{% if lograd %}
+{% from 'base/grid.twig' import grid, gridSripts, ctMenuSripts %}
+{{ gridSripts('tabela',[ {'label':'<i class="fa fa-plus"></i> Novo','link':"novo()" } ],
+                base_url()~'/app/system/logradouro/gridJson?params='~params,lograd 
+            ) }}
+{{ ctMenuSripts( 'html5menu' ) }}
+{% endif %}
+
+<script>
+    function getEdit(){
+    	sysModalBoxJs('Editar Logradouro','app/system/logradouro/form',true,'mdlLograd',null);
+    }
+    function novo(){
+    	sysModalBoxJs('Novo Logradouro','app/system/logradouro/form',false,'mdlLograd',null);
+    }
+    function onExitModal(){
+    	$('#dtb_tabela').DataTable().draw();
+    }   							
+</script>
+{% endblock %}

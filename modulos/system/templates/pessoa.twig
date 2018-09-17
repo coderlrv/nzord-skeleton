@@ -1,0 +1,49 @@
+{% extends "layout.html.twig" %}
+{% from 'base/forms.twig' import input as input_field, textarea, select, button %}
+{% from 'base/grid.twig' import grid %}
+
+{% block page_title %}
+    <h1 title="Pessoa">
+    	<i class="fa fa-user"></i> Pessoa
+    	{% if not pageDescri is empty  %}
+    	<small>{{pageDescri}}</small>
+    	{% endif %}
+    </h1>
+{% endblock %}
+
+{% block content %}
+{{ input_field('psq_id', null, null, 'id do Pessoa', null ,1 ) }}
+{{ grid( 'tabela', pessoa,true ) }}
+
+<menu id="html5menu" style="display: none" type="context">
+	<command label="Editar" icon="fa-pencil" onclick="getEdit()"></command>
+</menu>
+{% endblock %}
+
+{% block scripts %}
+{% if pessoa %}
+{% from 'base/grid.twig' import grid, gridSripts, ctMenuSripts %}
+{{ gridSripts('tabela',[
+                    {'label':'<i class="fa fa-files-o"></i> Novo','link':"novo()" },
+                    {'label':'<i class="fa fa-refresh"></i> Importa','link':"importaPes()" }
+                ],
+                base_url()~'/app/system/pessoa/gridJson?params='~params,pessoa 
+            ) }}
+{{ ctMenuSripts( 'html5menu' ) }}
+{% endif %}
+
+<script>
+    function getEdit(){
+    	sysModalBoxJs('Editar Pessoa','app/system/pessoa/form',true,'mdlPessoa',null);
+    }
+    function importaPes(){
+    	sysModalBoxJs('Importar Pessoas - RH','app/system/pessoa/importPes',false,'mdlImportaPes',null);
+    }	
+    function novo(){
+    	sysModalBoxJs('Novo Pessoa','app/system/pessoa/form',false,'mdlPessoa',null);
+    }
+    function onExitModal(){
+    	$('#dtb_tabela').DataTable().draw();
+    }   							
+</script>
+{% endblock %}

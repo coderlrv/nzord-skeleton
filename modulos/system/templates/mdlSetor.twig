@@ -1,0 +1,72 @@
+{% extends "modal.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block mContent %} 
+
+{% if act == 'form' %}
+{% from 'base/forms.twig' import input as input_field, hidden, textarea, select, button, datetime %}
+
+{{ hidden('latInic', dados.setor.lat|default('-13.0627779') ) }}
+{{ hidden('lonInic', dados.setor.lon|default('-55.9139727') ) }}
+<div class="col-xs-12 well">
+    <form class="form" id="mform" name="mform" method="POST">
+        {% if dados.setor.id != null %}
+       		{{ hidden('id', dados.setor.id) }}
+       {% endif %}
+       	{{ hidden('lat', dados.setor.lat|default('-13.0627779') ) }}
+       	{{ hidden('lon', dados.setor.lon|default('-55.9139727') ) }}
+        {{ input_field(null, 'ID:', dados.setor.id, null, null ,1,{'readonly':true} ) }}          
+        {{ select('orgao', 'Órgão: ', dados.setor.orgao, dados.dpto, null, 4, {'include_blank':true,'required':true} ) }}                 
+        {{ select('unidade', 'Unidade: ', dados.setor.unidade, dados.unidade, null, 4, {'include_blank':true,'required':true} ) }}                  
+        {{ input_field('sigla', 'Sigla: ',  dados.setor.sigla, 'Sigla', null ,1,{'required':true} ) }}        
+        {{ input_field('setor', 'Nome do Setor: ',  dados.setor.setor, 'Nome do Setor', null ,3,{'required':true} ) }}
+        {{ input_field('localiza', 'Localização: ',  dados.setor.localiza, 'Localiza', null ,3,{'required':true} ) }}
+        {{ input_field('endereco', 'Endereço: ',  dados.setor.endereco, 'Endereço', null ,4,{'required':true} ) }}
+        {{ input_field('bairro', 'Bairro: ',  dados.setor.bairro, 'bairro', null ,2,{'required':true} ) }}
+        {{ select('responsavel', 'Responsável: ', dados.setor.responsavel, dados.responsavel, null, 4, {'include_blank':true,'required':true} ) }}         
+        {{ input_field('telefone', 'Telefone: ',  dados.setor.telefone, 'telefone', null ,2,{'required':true} ) }}         
+        {{ input_field('email', 'E-mail: ',  dados.setor.email, 'email', null ,3,{'required':true} ) }}
+			
+        {{ select('status', 'Status: ', dados.setor.status, dados.status, null, 1, {'include_blank':true,'required':true} ) }}                 
+  		
+  		<div class="col-md-4">
+            {{ textarea('horario', 'Horário:', dados.setor.horario, 'Horário ', 3, null, 12 , {'required':true } ) }}
+            <div id="map" style="width: 100%; height: 160px; border: 1px solid #ccc;"></div>
+  		</div>
+  		{{ textarea('detalhe', 'Detalhe:', dados.setor.detalhe, 'Detalhe ', 18, null, 8 , {'required':true, 'summernote':true } ) }}
+  		
+        {{ button() }}
+    </form>
+</div>
+{% elseif act == 'det' %}
+	<div class="well col-xs-12">
+    	<div class="col-xs-8 bg-default"><b>Nome: </b> {{ dados.param.nome }} </div>
+    	<div class="col-xs-4 bg-default"><b>Status: </b> {{  dados.param.status|replace({1: 'Ativo', 0: 'Inativo'}) }}</div>
+    	<div class="col-xs-12 bg-default"><b>Descrição: </b> {{ dados.param.descricao }} </div>
+    	<div class="col-xs-12 bg-info"><b>Valor: </b><br>{{ dados.param.valor }} </div>
+	</div>
+{% endif %}
+
+{% endblock %}
+
+{% block mScript %}
+
+{% if act == 'form' %}
+<script src="{{ base_url() }}/js/mapa.js"></script> 
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkCjiCS6duzjsu9P6udT9egfsx5-fVZKo&callback=initialize" type="text/javascript"></script>
+<script>
+jQuery(document).ready(function() {
+	jQuery('#nome').keyup(function() {
+		$(this).val($(this).val().toUpperCase());
+	});
+});
+$('#mform').submit(function(e){
+	e.preventDefault();
+    $('button[type=submit]', this).attr('disabled', 'disabled');
+	jqSaveModal('mform','{{ base_url() }}/app/system/setor/save','mdlSetor');
+});
+</script>
+{% endif %}
+
+{% endblock %}
+

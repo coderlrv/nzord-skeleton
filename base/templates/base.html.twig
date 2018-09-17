@@ -1,0 +1,41 @@
+{% extends "layout.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block content %}
+{% from 'base/widget.twig' import widget as widgetBox, boxLink as blink, appLink as alink, btnDropdown, ulToDoTiAgenda as ulToDo, ulUserList, ulBdayList %}  
+{% from 'base/buttons.twig' import btnArApp %}  
+
+<div class="col-md-3 col-xs-12">
+    {{ widgetBox('wWelcome', 'Bem Vindo', '<h4>Olá, <b>'~session.app.userNome~'!</b></h4>
+    	Login: <b>'~session.app.login~'</b> <br> 
+        Sessão Atual: <a href="'~base_url()~'app/system/suasessao" title="Acessar Sessão"><b>'~session.app.sessao~'</b></a> | Data: <b>'~session.app.loggedIn|date("d/m/Y H:i")~'</b><br>
+        IP Atual: <b>'~session.app.remoteIp~'</b> ','coffee','warning',12,{'minimiza':true,'solid':true}) }}
+
+{% if setorDesc %}
+    {{ widgetBox('wPessoa', setorDesc.orgao~'|'~setorDesc.setor,ulUserList(pessoas),'users','success',12,{'minimiza':true,'solid':true}) }}
+{% endif %}
+</div>
+
+{% if session.app.menu %}
+    {{ widgetBox('wLink','Atalhos',btnArApp(session.app.menu),'globe','info',9,{'minimiza':true,'solid':true,'class':'text-center'}) }}  
+{% endif %}
+
+<div class="col-md-4 col-xs-12">
+{% if setor %}
+    {{ widgetBox('wSetor','Departamento/Setor',setor.detalhe|convert_encoding('latin1', 'UTF-8')|raw,'book','default',12,{'minimiza':true,'solid':true,'closed':true}) }}
+{% endif %}
+</div>
+
+{% if inst %}
+	{% set info = [] %}
+    {% for row in inst %}
+    	{% set info = info|merge([row.texto|convert_encoding('latin1', 'UTF-8')|raw]) %}
+   	{% endfor %}   	
+{{ widgetBox('wInst', 'Institucional',info|join('<hr>'),'certificate','success',5,{'minimiza':true,'solid':true,'closed':true}) }}
+{% endif %}
+
+{% if birthday %}
+    {{ widgetBox('wBDay','Aniversariantes',ulBdayList(birthday,40,msgBday),'birthday-cake','primary',9,{'minimiza':true,'solid':true,'class':'text-center'}) }}  
+{% endif %}
+
+{% endblock %}

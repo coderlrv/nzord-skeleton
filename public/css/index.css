@@ -1,0 +1,58 @@
+@charset "ISO-8859-1";
+
+.card-container.card {
+    max-width: 350px;
+    padding: 10px 10px;
+}
+
+.card {
+    background-color: #F7F7F7;
+    padding: 10px 15px 20px;
+    margin: 0 auto 15px;
+        margin-top: 0px;
+    margin-top: -500px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0,0,0,0.3);
+    box-shadow: 0px 2px 2px rgba(0,0,0,0.3);
+    text-align: center;
+    transition: margin-top 0.3s ease;
+    overflow: hidden;
+}
+
+.input-lg + .form-control-feedback, .input-group-lg + .form-control-feedback, .form-group-lg .form-control + .form-control-feedback {
+    width: 46px;
+    height: 46px;
+    line-height: 46px;
+}
+
+.form-control-feedback {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    display: block;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    pointer-events: none;
+}
+
+h3 {
+	text-shadow: 1px 1px 3px #ffffff;
+	font-weight: bold;
+}
+.username{
+	margin-bottom: -1px; 
+	border-bottom-right-radius: 0; 
+	border-bottom-left-radius: 0;
+}
+
+.password{
+	margin-bottom: 10px; 
+	border-top-left-radius: 0; 
+	border-top-right-radius: 0;
+}

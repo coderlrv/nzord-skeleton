@@ -1,0 +1,43 @@
+{% extends "layout.html.twig" %}
+{% from 'base/forms.twig' import input as input_field, textarea, select, button %}
+{% from 'base/grid.twig' import grid %}
+
+{% block page_title %}
+<h1 title="Usuarios">
+	<i class="fa fa-users"></i> Setores
+	{% if not pageDescri is empty  %}
+	<small>{{pageDescri}}</small>
+	{% endif %}
+</h1>
+{% endblock %}
+
+{% block content %}
+{{ grid( 'tabela', setores,true ) }}
+
+<menu id="html5menu" style="display: none" type="context">
+	<command label="Editar" icon="fa-pencil" onclick="getEdit()"></command>
+</menu>
+{% endblock %}
+
+{% block scripts %}
+{% if setores %}
+{% from 'base/grid.twig' import grid, gridSripts, ctMenuSripts %}
+{{ gridSripts('tabela',[
+                    {'label':'Novo','link':"novo()" }
+                ],
+                base_url()~'/app/system/setor/gridJson?params='~params,setores 
+            ) }}
+{{ ctMenuSripts( 'html5menu' ) }}
+{% endif %}
+<script>
+	function getEdit() {
+		sysModalBoxJs('Editar Setor', 'app/system/setor/form', true,'mdlSetor');
+	}	
+	function novo() {
+		sysModalBoxJs('Novo Setor', 'app/system/setor/form', false,'mdlSetor', null);
+	}
+	function onExitModal() {
+		$('#dtb_tabela').DataTable().draw();
+	}	
+</script>
+{% endblock %}

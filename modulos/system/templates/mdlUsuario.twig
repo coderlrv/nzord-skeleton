@@ -1,0 +1,63 @@
+{% extends "modal.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block mContent %}
+{% if act == 'form' %}
+{% from 'base/forms.twig' import input as input_field, hidden, textarea, select, button, datetime,password %}
+
+<div class="col-xs-12 well">
+    <form class="form" id="mform" name="mform" method="POST" action="{{ base_url() }}/app/system/usuario/save">
+        {{ hidden('id', dados.usuario.id ) }}
+        
+        {{ select('perfil', 'Perfil: ', dados.usuario.perfil, dados.perfis, null, 4, {'include_blank':true,'required':true} ) }}
+        {{ select('dpto', 'Departamento Lotado: ', dados.usuario.dpto, dados.dptos, null, 4, {'include_blank':true,'required':true} ) }}
+        {{ select('setor', 'Setor Lotado: ', dados.usuario.setor, dados.setores, null, 4, {'include_blank':true,'required':true,'select2':true} ) }}
+        
+        {{ select('matricula', 'Matricula Funcional: ', dados.usuario.matricula, dados.funcs, null, 4, {'include_blank':true,'required':true,'select2':true} ) }}
+        {{ input_field('nome', 'Nome Completo: ',  dados.usuario.nome, 'Nome do Usuário', null ,3,{'required':true} ) }}
+        {{ input_field('login', 'Login: ',  dados.usuario.login, 'login', null ,2,{'required':true} ) }}
+        {{ select('status', 'Status: ', dados.usuario.status, dados.status, null, 1, {'include_blank':true,'required':true} ) }}
+		{{ password('senha','Senha: ',null,'Digite senha..',null,2,{ 'required': not dados.edit }) }}
+
+        {{ button() }}
+    </form>
+</div>
+{% elseif act == 'det' %}
+	<div class="well col-xs-12">
+    	<div class="col-xs-8 bg-default"><b>Nome: </b> {{ dados.param.nome }} </div>
+    	<div class="col-xs-4 bg-default"><b>Status: </b> {{  dados.param.status|replace({1: 'Ativo', 0: 'Inativo'}) }}</div>
+    	<div class="col-xs-12 bg-default"><b>Descrição: </b> {{ dados.param.descricao }} </div>
+    	<div class="col-xs-12 bg-info"><b>Valor: </b><br>{{ dados.param.valor }} </div>
+	</div>
+{% endif %}
+
+{% if dados.pessoa %}
+<div class="col-xs-12 well">
+	<div class="col-xs-12 "><b>Dados de Funcionário: tab_pessoa</b></div>
+	<div class="col-xs-2 bg-danger"><b>ID Pessoa: </b> {{ dados.pessoa.id }} </div>
+	<div class="col-xs-7 bg-info"><b>Nome: </b>{{ dados.pessoa.nome }}</div>
+	<div class="col-xs-3 bg-warning"><b>Nasc.: </b>{{ dados.pessoa.data_nasc|date("d/m/Y") }}</div>
+	<div class="col-xs-3 bg-warning"><b>Contato: </b>{{ dados.pessoa.celular }}</div>
+	<div class="col-xs-5 bg-warning"><b>Mail: </b>{{ dados.pessoa.mail }}</div>
+	<div class="col-xs-2 bg-info"><b>CPF: </b>{{ dados.pessoa.cpf_cnpj }}</div>
+	<div class="col-xs-2 bg-danger"><b>Func.: </b> {{ dados.pessoa.func|replace({1: 'Sim', 0: 'Não'}) }}</div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block mScript %}
+
+	{% if act == 'form' %}
+		<script>
+			$(document).ready(function() {
+				$('#nome').keyup(function() {
+					$(this).val($(this).val().toUpperCase());
+				});
+			});
+
+			$('#mform').saveForm('{{ path_for_model('system','usuario','save') }}',{ modalClose:'mdlUsuario' });
+		</script>
+	{% endif %}
+{% endblock %}
+

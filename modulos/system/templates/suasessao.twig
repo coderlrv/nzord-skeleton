@@ -1,0 +1,148 @@
+{% extends "layout.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+{% block content %}  
+
+{% if act == 'edit' %}
+    <div class="col-xs-12 ">		
+		<form id="form2" name="form2" action="{{ base_url() }}/app/system/suasessao/save" method="post" enctype="multipart/form-data">
+		<div class="box-header with-border" style="margin-bottom: 10px;">
+	    	<i class="fa fa-pencil"></i> <h3 class="box-title">Você esta atualizando seu perfil</h3>
+		</div>
+		<div class="col-md-12">    
+        	<p><b>Login:</b> {{ usuario.login }}</p>
+        	<p> <b>Senha:</b> **********</p>
+            <p> <b>Perfil:</b> {{ perfil }}</p>
+			<hr>
+        </div>
+		<div class="col-md-12">    
+			<em><i class="fa fa-info-circle"></i> Você pode atualizar somente o que desejar!!</em> 
+			<br><br>
+		</div>	
+		
+		<form id="form2" name="form2" action="{{ base_url() }}/app/system/suasessao/save" method="post" enctype="multipart/form-data">
+		<input type="hidden" id="id" name="id" value="{{ usuario.id }}">
+        <div class="form-group col-md-1 col-xs-6"> 
+        	<label>Matricula: </label>
+          	<input id="matricula" name="matricula" type="text" class="form-control" value="{{ usuario.matricula }}">
+        </div> 	
+        <div class="form-group col-md-3 col-xs-6"> 
+        	<label>Nome: </label>
+          	<input id="nome" name="nome" type="text" class="form-control" value="{{ usuario.nome }}">
+        </div>
+        <div class="form-group  col-md-2  col-xs-12 ">
+        	<label>Gênero: </label><span style="color: red;" title="Campo Obrigatório"> <b>*</b></span>
+			<select class="form-control" name="genero" id="genero" required="">
+    			{% for row in genero %}
+                    <option value="{{ row.id }}"{% if row.id == usuario.genero %} selected="selected" {% endif %} >{{ row.nome }} </option>
+                {% endfor %}   
+			</select>
+		</div>
+		<div class="file-field form-group col-md-5 col-xs-12">
+        	<label>Foto: </label>
+        	<input type="file" id="avatar" name="avatar" class="form-control" accept="image/*">
+  		</div> 
+	 	<div class="form-group col-xs-12 ">
+	 		<span class="text-muted"> A senha para o usuário é definida diretamente no Gerenciador do Active Directory (AD).</span>	
+	 	</div>         
+		{# <div class="form-group col-md-2 col-xs-6"> 
+			<label>Nova Senha: <meter value="0" id="mtSenha" max="50"></meter></label>
+          	<input id="password" name="password" type="password" class="form-control">
+        </div>
+        <div class="form-group col-md-2 col-xs-6"> 
+        	<label>Repetir Senha: </label>
+          	<input id="password_r" name="password_r" type="password" class="form-control">
+        </div> #}			
+		<div class="col-xs-12" style="margin-top:15px">
+			<a class="btn btn-flat btn-sm btn-info" href="{{ base_url() }}/app/system/suasessao"><span class="fa fa-arrow-left"></span> Voltar</a>
+        	<button class="btn btn-flat btn-sm btn-success" type="submit"> <span class="fa fa-save"></span> Salvar</button>
+		</div>
+	</form>
+  </div>  
+{% else %}
+     <div class="col-xs-12 well">
+     <div class="col-md-3">
+		<div class="box box-primary">
+            <div class="box-body box-profile">
+              <img class="profile-user-img img-responsive img-circle" style="height: 100px;" src="{{ base_url() }}/{{ usuario.avatar }}" alt="User profile picture">
+              <h3 class="profile-username text-center">{{ usuario.nome }}</h3>
+              <p class="text-muted text-center">{{ sessao.perfil }}</p>
+              
+               <ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>Login</b> <a class="pull-right">{{ session.app.login }}</a>
+                </li>
+                <li class="list-group-item">
+                  <b>Perfil</b> <a class="pull-right">{{ sessao.perfil }}</a>
+                </li>
+              </ul>
+              <a href="{{ base_url() }}/app/system/suasessao/edit/{{ session.app.user }}" class="btn btn-primary btn-block"><b><i class="fa fa-pencil"></i> Editar</b></a>
+            </div>
+        </div>
+	</div>
+    <div class="col-md-9">    
+        <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">Dados da Sessão Atual</h3>
+            </div>
+           
+            <div class="box-body">
+              <div class="col-xs-4">
+                <strong><i class="fa fa-id-card margin-r-5"></i> ID</strong>
+                <p class="text-muted">{{ sessao.id }}</p>
+              </div>
+              <div class="col-xs-8">              
+                <strong><i class="fa fa-key margin-r-5"></i> Session</strong>
+                <p class="text-muted">{{ sessao.session_id }}</p>
+              </div>
+              <div class="col-xs-12">
+              		<hr style="margin-top: 10px;margin-bottom: 10px;">
+			  </div>
+              <strong><i class="fa fa-clock-o margin-r-5"></i> Data/Hora</strong>
+              <p class="text-muted">{{ sessao.data|date('d/m/Y H:i') }}</p>
+
+              <hr style="margin-top: 10px;margin-bottom: 10px;">
+              
+              <strong><i class="fa fa-globe margin-r-5"></i> Browser</strong>
+              <p class="text-muted">{{ sessao.browser }}</p>
+
+               <hr style="margin-top: 10px;margin-bottom: 10px;">
+
+              <strong><i class="fa fa-laptop margin-r-5"></i> IP Remoto</strong>
+              <p class="text-muted">{{ sessao.remo_ip }}</p>
+
+              <hr style="margin-top: 10px;margin-bottom: 10px;">
+              
+              <strong><i class="fa fa-power-off margin-r-5"></i> Situação</strong>
+              <p class="text-muted">{{ sessao.status|raw }}</p>
+            </div>
+        </div>
+     </div>
+    </div>   
+  {% endif %}
+        
+{% endblock %}
+
+{% block scripts %}
+
+{% if act == 'edit' %}
+<script src="{{ base_url() }}/js/jquery.complexify.js"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		$('input').keypress(function (e) {
+		var code = null;
+		code = (e.keyCode ? e.keyCode : e.which);
+		return (code == 13) ? false : true;
+		});
+	});
+
+	 $(function () {
+		$("#password").complexify({}, function (valid, complexity) {
+			document.getElementById("mtSenha").value = complexity;
+			//$("#progress").css("width", complexity+"%").attr("aria-valuenow",complexity);
+		});
+	  });
+</script>
+{% endif %}
+  
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "layout.html.twig" %}
+
+{% block page_title %}
+    <h1 title="Configurações">
+    	<i class="fa fa-wrench"></i> Configurações
+    	{% if not pageDescri is empty  %}
+    	<small>{{pageDescri}}</small>
+    	{% endif %}
+    </h1>
+{% endblock %}
+
+{% block content %}
+{% from 'base/forms.twig' import input as input_field, hidden, textarea, select, button, datetime %}
+
+<div class="col-xs-12 well">
+	<h4 class="bg-warning"><b>Atenção: </b>Altere apenas as configurações necessarias!</h4>
+    <form class="form" id="mform" name="mform" method="POST" action="{{ base_url() }}/app/system/config/save">        
+   		{{ hidden('id', config.id) }}
+    	
+    	{{ input_field('title_mini', 'M. Titulo: ',  config.title_mini, 'M. Titulo', null ,1,{'required':true} ) }}  
+    	{{ input_field('title', 'Titulo: ',  config.title, 'title', null ,2,{'required':true} ) }}  
+    	{{ input_field('title_idx', 'Titulo Index: ',  config.title_idx, 'title_idx', null ,4,{'required':true} ) }}  
+    	{{ input_field('descricao', 'Descrição: ', config.descricao, 'Descrição', null ,5,{'required':true} ) }}  
+    	
+    	{{ select('theme', 'Theme: ', config.theme, themes, null, 2, {'include_blank':true,'required':true} ) }}  
+    	{{ input_field('image_idx', 'Image_idx: ', config.image_idx, 'image_idx', null ,3,{'required':true,'readonly':true,'action':'onclick=openKCFinder(this) style=cursor:pointer'} ) }}
+    	{{ input_field('image_logo', 'Image_logo: ', config.image_logo, 'image_logo', null ,3,{'required':true,'readonly':true,'action':'onclick=openKCFinder(this) style=cursor:pointer'} ) }}     
+    	{{ input_field('icon', 'FavIcon: ', config.icon, 'icon', null ,3,{'required':true,'readonly':true,'action':'onclick=openKCFinder(this) style=cursor:pointer'} ) }}
+        {{ textarea('login_msg', 'Login Msg: <em>(html)</em>', config.login_msg , 'login_msg ', 10, null, 6 , {'required':true, 'summernote':true } ) }}
+        {{ textarea('footer', 'Footer: <em>(html)</em>', config.footer , 'footer ', 10, null, 6 , {'required':true, 'summernote':true } ) }}
+            
+        {{ button() }}
+    </form>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

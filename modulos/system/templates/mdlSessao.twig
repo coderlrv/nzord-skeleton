@@ -1,0 +1,35 @@
+{% extends "modal.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+{% block mContent %} 
+
+{% if act == 'detAcesso' %}
+     <div class="col-xs-12 well">     
+     <div class="col-xs-12 dataTable_wrapper">
+     	{% if dados %}
+        <table id="tabela" class="table table-striped table-bordered table-hover table-responsive" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>DATA</th>
+                    <th>ARQUIVO</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in dados.sessao %}
+                    <tr>
+                        <td>{{ row.sessao }}</td>                  
+                        <td>{{ row.timestamp|date('d/m/Y H:i') }}</td>
+                        <td>{{ row.arquivo }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+           	<div class="alert alert-danger"><b>Sem Dados para Mostrar!</b></div>
+        {% endif %}
+    </div>
+    </div>     
+ {% endif %}
+ 
+     
+{% endblock %}

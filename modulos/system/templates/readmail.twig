@@ -1,0 +1,113 @@
+{% extends "layout.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block head %} 
+<style>
+.box-body .nav>li>a {
+    position: relative !important;
+    display: block !important;
+    padding: 10px 15px !important;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 8px !important;
+    line-height: 1.42857143 !important;
+    vertical-align: top !important;
+    border-top: 1px solid #ddd !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+        <div class="col-md-3">
+          <a href="{{ base_url() }}/app/system/mensagem/nova" class="btn btn-primary btn-block margin-bottom">Nova Mensagem</a>
+
+          <div class="box box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title">Pastas</h3>
+
+              <div class="box-tools">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="box-body no-padding">
+               <ul class="nav nav-pills nav-stacked">
+                <li><a href="{{ base_url() }}/app/system/mensagem"><i class="fa fa-inbox"></i>Caixa de Entrada             		
+            		{% if qtde.msgs >= 1 %} <span class="label label-default pull-right">{{ qtde.msgs }}</span>&nbsp; {% endif %}
+            		{% if qtde.nlida >= 1 %} <span class="label label-success pull-right" data-toggle="tooltip" title="Não Lidas!">{{ qtde.nlida }}</span> {% endif %}
+            		</a></li>
+                <li><a href="{{ base_url() }}/app/system/mensagem/enviados"><i class="fa fa-send"></i> Envidados     		
+            		{% if qtde.enviado >= 1 %} <span class="label label-default pull-right">{{ qtde.enviado }}</span>&nbsp; {% endif %}
+                	</a></li>
+                <li><a href="{{ base_url() }}/app/system/mensagem/contato"><i class="fa fa-users"></i> Contatos
+                	{% if qtde.nlida >= 1 %} <span class="label label-default pull-right">{{ qtde.contatos }}</span> {% endif %}
+                	</a></li>
+              </ul>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+          <div class="box box-primary" id="readmailbox">
+            <div class="box-header with-border">
+              <h3 class="box-title">Ler E-Mail</h3>
+
+              <div class="mailbox-controls box-tools pull-right no-print">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Responder"><i class="fa fa-reply"></i></button>
+                  <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Encaminhar"><i class="fa fa-share"></i></button>
+                  <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Imprimir" onclick="printDiv('readmailbox')"><i class="fa fa-print"></i></button>
+                </div>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <div class="mailbox-read-info">
+                <h3>{{ mensagem.assunto }}</h3>
+                <h5>De: {{ mensagem.de }}<span class="mailbox-read-time pull-right text-right">{{ mensagem.data|date("d/m/Y H:i")| replace({" ":"<br>"})|raw }}</span>
+                	<br><small>Para: {{ mensagem.para| replace({",":", "}) }}</small>
+                </h5>
+              </div>
+              
+              <div class="mailbox-read-message" style="min-height: 50vh;">
+                {{ mensagem.texto|raw }}
+              </div>
+              <!-- /.mailbox-read-message -->
+            </div>
+            <!-- /.box-body -->
+            {% if mensagem.anexo %}
+            <div class="box-footer">
+              <ul class="mailbox-attachments clearfix">
+              {% for row in mensagem.anexo %}
+                <li>
+                  <div class="mailbox-attachment-info">
+                    <a href="#" class="mailbox-attachment-name" data-toggle="tooltip" title="{{ row.nome }}">
+                    	<i class="fa fa-paperclip"></i> {{ (row.nome|length > 23 ? row.nome|slice(0, 23) ~ '…' : row.nome) }}
+                    </a>
+                  </div>
+                </li>
+                {% endfor %}                
+              </ul>              
+            </div>
+            {% endif %}            
+            
+          </div>
+          <!-- /. box -->
+        </div>    
+
+
+    </div>     
+{% endblock %}
+
+{% block scripts %}
+{% if mensagem %}	 
+<script>
+  
+</script>
+{% endif %}
+
+{% endblock %}

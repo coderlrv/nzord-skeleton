@@ -1,0 +1,46 @@
+{% extends "modal.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block mContent %} 
+
+{% if act == 'form' %}
+{% from 'base/forms.twig' import input as input_field, hidden, textarea, select, button, datetime %}
+
+<div class="col-xs-12 well">
+    <form class="form" id="mform" name="mform" method="POST">
+        {% if dados.basica.id != null %}
+       		{{ hidden('id', dados.basica.id) }}
+        {% endif %}
+        {{ input_field(null, 'ID:', dados.basica.id, null, null ,1,{'readonly':true} ) }}                            
+        {{ input_field('sigla', 'Sigla: ', dados.basica.sigla, null, null ,1,{'required':true} ) }}                          
+        {{ input_field('tabela', 'Tabela: ', dados.basica.tabela, null, null ,2,{'required':true} ) }}
+        {# {{ select('tabela', 'Tabela: ', dados.basica.tabela, dados.tabela, null, 2, {'include_blank':true,'required':true} ) }} #}                
+        {{ input_field('valor', 'valor: ', dados.basica.valor, 'Valor', null ,5,{'required':true} ) }}  
+        {{ select('status', 'Status: ', dados.basica.status, dados.status, null, 1, {'include_blank':true,'required':true} ) }}                  
+  		
+        {{ button() }}
+    </form>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block mScript %}
+{% if act == 'form' %}
+<script>
+jQuery(document).ready(function() {
+	jQuery('#sigla').keyup(function() {
+		$(this).val($(this).val().toUpperCase());
+	});
+});
+$('#mform').submit(function(e){
+	e.preventDefault();
+    $('button[type=submit]', this).attr('disabled', 'disabled');
+	jqSaveModal('mform','{{ base_url() }}/app/system/basica/save','mdlBasica');
+});
+</script>
+{% endif %}
+
+{% endblock %}
+
+

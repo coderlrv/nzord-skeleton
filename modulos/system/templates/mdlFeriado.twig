@@ -1,0 +1,40 @@
+{% extends "modal.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block mContent %} 
+
+{% if act == 'form' %}
+{% from 'base/forms.twig' import input as input_field, hidden, textarea, select, button, datetime %}
+
+<div class="col-xs-12 well">
+    <form class="form" id="mform" name="mform" method="POST">
+        {% if dados.feriado.id != null %}
+       		{{ hidden('id', dados.feriado.id) }}
+        {% endif %}
+        {{ input_field(null, 'ID:', dados.feriado.id, null, null ,1,{'readonly':true} ) }}           
+		{{ datetime('data','Data:',dados.feriado.data,null,null,2,{'required':true,'format':'DD/MM/YYYY'}) }}
+		{{ select('tipo', 'Tipo: ', dados.feriado.tipo, dados.tipo, null, 2, {'include_blank':true,'required':true} ) }}		        
+        {{ input_field('descricao', 'Descrição: ', dados.feriado.descricao, 'Descrição', null ,7,{'required':true} ) }}        		                                           
+  		
+        {{ button() }}
+    </form>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block mScript %}
+
+{% if act == 'form' %}
+<script>
+$('#mform').submit(function(e){
+	e.preventDefault();
+    $('button[type=submit]', this).attr('disabled', 'disabled');
+	jqSaveModal('mform','{{ base_url() }}/app/system/feriado/save','mdlFeriado');
+});
+</script>
+{% endif %}
+
+{% endblock %}
+
+

@@ -1,0 +1,85 @@
+{
+    "name": "preflrv/nzord-skeleton",
+    "description": "skeleton projeto nzord",
+    "authors": [
+        {
+            "name": "TI Lucas do Rio Verde",
+            "email": "ti@lucasdorioverde.mt.gov.br"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Modulos\\": "modulos/",
+            "Base\\": "base/"
+        }
+    },
+    "require": {
+        "oomphinc/composer-installers-extender": "^1.1",
+        "bower-asset/jquery": "^3.3.1",
+        "bower-asset/bootstrap": "^3.3.7",
+        "bower-asset/adminlte": "^2.4",
+        "bower-asset/select2": "^4.0.5",
+        "bower-asset/jquery-tmpl": "dev-master",
+        "bower-asset/moment": "^2.22",
+        "npm-asset/loadjs": "^3.5.4",
+        "npm-asset/lobibox": "^1.2",
+        "bower-asset/jquery.blockui": "^2.70",
+        "bower-asset/fastclick": "^1.0",
+        "bower-asset/pace": "^1.0",
+        "bower-asset/ionicons-min": "^2.0",
+        "bower-asset/fontawesome": "^4.7",
+        "npm-asset/jquery-contextmenu": "^2.7.0",
+        "bower-asset/codemirror": "^5.40",
+        "bower-asset/summernote": "^0.8.10",
+        "bower-asset/jquery.inputmask": "^4.0",
+        "bower-asset/jquery-maskmoney": "^3.0",
+        "bower-asset/colorpicker": "^1.2",
+        "bower-asset/chosen": "^1.8",
+        "npm-asset/bootstrap-chosen": "^1.4",
+        "npm-asset/highcharts": "^6.1",
+        "bower-asset/fullcalendar": "^3.9",
+        "bower-asset/jquery-slimscroll": "^1.3",
+        "bower-asset/bootstrap3-wysiwyg": "^0.3.3",
+        "npm-asset/nzord-app": "^1.0.5",
+        "npm-asset/coder-lrv--ndatatables": "^1.0",
+        "npm-asset/jquery-base64": "^1.0",
+        "servocoder/richfilemanager-php": "^1.2.3",
+        "bower-asset/rich-filemanager": "^2.7",
+        "preflrv/nzord": "@dev",
+        "npm-asset/eonasdan-bootstrap-datetimepicker": "^4.17"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7",
+        "there4/slim-test-helpers": "^2.1"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "scripts": {
+        "server": "php -S 0.0.0.0:8080  > /dev/null 2>&1 &",
+        "test": "vendor/bin/phpunit --verbose --coverage-text",
+        "post-install-cmd": [
+            "composer dump-autoload -o"
+        ],
+        "post-update-cmd": [
+            "composer dump-autoload -o"
+        ]
+    },
+    "extra": {
+        "installer-types": [
+          "bower-asset",
+          "npm-asset"
+        ],
+        "installer-paths": {
+          "public/assets/{$name}": [
+            "type:bower-asset",
+            "type:npm-asset"
+          ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

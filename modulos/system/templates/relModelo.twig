@@ -1,0 +1,152 @@
+{% extends "layout.html.twig" %}
+{% block page_title %}
+	<h1 title="Modelos de Relatórios">
+        <i class="fa fa-file"></i> Modelos de Relatórios
+        {% if not pageDescri is empty  %}
+            <small>{{pageDescri}}</small>
+        {% endif %}
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {% from 'base/forms.twig' import input as input_field, hidden, textarea, select, button, datetime %}
+    {% from 'base/buttons.twig' import button as btnHref %}
+  
+    {% include 'base/message.twig' %}
+
+    {% if act == 'index' %}
+        {% from 'base/grid.twig' import grid %}
+    	{{ grid( 'tabela', modelo,true ) }}
+    	
+        <menu id="html5menu" style="display:none" type="context">
+          <command label="Editar" icon="fa-pencil" onclick="editar();" ></command>
+        </menu>
+    
+    {% elseif act == 'form' %}
+        <form class="form" id="frmModelo" method="POST" action="{{ base_url() }}/app/system/modelo/save">
+            {% if modelo.id != null %}
+                {{ hidden('id',modelo.id) }}
+            {% endif %}
+            {{ input_field(null, 'ID:', modelo.id, null, null ,1,{'readonly':true} ) }}
+            {{ input_field('titulo', 'Título:', modelo.titulo, null, null ,2,{'required':true} ) }}
+            {{ input_field('chave', 'Chave do Relatório:', modelo.chave, null, null ,2,{'required':true} ) }}
+            {{ select('rotacao', 'Rotação: ', modelo.rotacao, rotacoes, null, 1, {'include_blank':false,'required':true} ) }}
+            
+            {{ select('cabecalho', 'Cabeçalho: ', modelo.cabecalho, headers, null, 2, {'include_blank':true,'required':false} ) }}
+            {{ select('rodape', 'Rodape: ', modelo.rodape, footers, null, 2, {'include_blank':true,'required':false} ) }}
+            {{ select('tabela', 'Tabela: ', modelo.tabela, tabela, null, 1, {'include_blank':null,'required':true} ) }}
+            {{ select('status', 'Status: ', modelo.status, status, null, 1, {'include_blank':false,'required':true} ) }}
+            <div class="col-xs-12">
+                <div id="accordion">
+                    <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                    <div class="panel box box-warning">
+                    <div class="box-header with-border">
+                        <h4 class="box-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" class="collapsed">
+                            <i class="fa fa-cog"></i> <b> Consulta SQL</b>
+                        </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                        <div class="box-body">
+                        {{ textarea('cod_sql', 'Codigo SQL:', modelo.cod_sql, 'Codigo SQL ', 15, null, 12 , {'required':false,'codeStyle':'text/x-mysql'} ) }}
+                        </div>
+                    </div>
+                    </div>
+                    <div class="panel box box-danger">
+                    <div class="box-header with-border">
+                        <h4 class="box-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed" aria-expanded="false">
+                            <i class="fa fa-file"></i> <b onclick="listaTabela();"> Design do Relatório</b>
+                        </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                        <div class="box-body" style="display: flex; align-items: center;">
+                        {{ textarea('detalhe', 'Design do Relatório', modelo.detalhe, 'Design do Relatório ', 25, null, 10 , {'required':true, 'summernote':true } ) }}
+                        {{ btnHref([{'link':'setContentsRelMod(); return false;', 'title':'Adicionar', 'img':'arrow-left', 'js':true, 'btn':'default','size':'sm'}]) }}
+                        {{ select('lstVariaveis','Campos: ',null,null,null,2,{'multiple':true}) }} 
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            
+            {{ button(null,null,null,'app/system/modelo') }}
+        </form>
+    {% endif %}
+
+{% endblock %}
+
+
+{% block scripts %}
+    {% if act == 'index' %}
+        {% from 'base/grid.twig' import grid, gridSripts, ctMenuSripts %}
+        {{ gridSripts('tabela'
+                        ,[{'label':'Novo','link':'window.location = "./modelo/form"' }]
+                        ,base_url()~'/app/system/modelo/gridJson?params='~params,modelo
+                        ,{'interval':'1800000','timeout':'10000','select':true} ) }} 
+        {{ ctMenuSripts( 'html5menu' ) }}
+        <script>
+        function editar(){
+            var id = validSelect();
+            if( id ){
+                window.location.href='{{ base_url() }}/app/system/modelo/form/'+id;
+            }
+        }
+        </script>
+    {% elseif act == 'form' %}
+    <script>
+
+        require(['base64'],function(){
+            $('#lstVariaveis').prop('size',"15");
+    
+            setTimeout(listaTabela(),1000);
+        });
+
+        function listaTabela(){
+            var options = '';
+            $('#btnCarregaCol').show();
+
+            if( $('#cod_sql').val()) {
+                    
+                var dados =  $.base64.encode($('#cod_sql').val());
+                $.getJSON('{{ base_url() }}/funcao',{ act: 'getAlias',dados: dados, ajax: 'true' }, function(j){
+                    
+                    for (var i = 0; i < j.length; i++) {
+                        options += '<option value="' + j[i].nome + '">' + j[i].idtab + ' - ' + j[i].nome.toLowerCase() + '</option>';
+                    }
+                    
+                    $('#lstVariaveis').html(options).show();
+                });
+
+            }else if($('#tabela').val() !== 7){
+
+                var tabName = $('#tabela :selected').text().trim();
+                var dados =  $.base64.encode('select * from '+tabName);
+
+                $.getJSON('{{ base_url() }}/funcao',{act: 'getAlias',dados: dados, ajax: 'true'}, function(j){
+                            
+                    for (var i = 0; i < j.length; i++) {
+                        options += '<option value="' + j[i].nome + '">' + j[i].idtab + ' - ' + j[i].nome.toLowerCase() + '</option>';
+                    }
+                                
+                    $('#lstVariaveis').html(options).show();
+                });
+            }
+        }
+    
+
+        {# Aplica verbatim para nao interpretar no js a sintaxe do twig #}
+        {% verbatim %}
+            function setContentsRelMod() {
+                var sValor = document.forms[1].lstVariaveis.value;
+                    if (sValor != ''){
+                        document.execCommand('insertHtml', null, "{{dados." + sValor.toLowerCase() + "}}");
+                    }
+            }
+        {% endverbatim %}
+    </script>
+    {% endif %}
+{% endblock %}
+

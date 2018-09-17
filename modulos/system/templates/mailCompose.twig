@@ -1,0 +1,85 @@
+{% extends "layout.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block head %} 
+<link rel="stylesheet" href="{{ base_url() }}/libs/select2/select2.min.css">
+<link rel="stylesheet" href="{{ base_url() }}/libs/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+<style>
+.box-body .nav>li>a {
+    position: relative !important;
+    display: block !important;
+    padding: 10px 15px !important;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 8px !important;
+    line-height: 1.42857143 !important;
+    vertical-align: top !important;
+    border-top: 1px solid #ddd !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+    {% from 'base/mail.twig' import menuMail %}
+	{{ menuMail( qtde ) }}  
+	
+        <!-- /.col -->
+        <div class="col-md-9">
+          <div class="box box-primary" id="readmailbox">
+            <div class="box-header with-border">
+              <h3 class="box-title">Nova Mensagem</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+            <form class="form" id="contato-form" name="contato-form" method="POST" action="{{ base_url() }}/app/system/mensagem/save">
+              <div class="form-group">
+                <select class="form-control select2" multiple="multiple" name="para[]" data-placeholder="Para..."style="width: 100%;" required>
+                {{ dump(args) }}
+                {% for row in contatos %}
+                  <option value="{{ row.id }}" {% if args.id == row.id %} selected="selected" {% endif %}>{{ row.nome }}</option>
+                  {% endfor %} 
+                </select>
+              </div>
+              <div class="form-group">
+                <input class="form-control" placeholder="Assunto:" name="assunto" required>
+              </div>
+              <div class="form-group">
+                    <textarea id="compose-textarea" class="form-control" style="height: 300px" placeholder="Texto..." name="texto" required></textarea>
+              </div>
+              <div class="form-group">
+                <div class="btn btn-default btn-file">
+                  <i class="fa fa-paperclip"></i> Anexo
+                  <input type="file" name="attachment">
+                </div>
+                <p class="help-block">Max. 8MB</p>
+              </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+              <div class="pull-right">
+                <button class="btn btn-primary" tabindex="3"  type="submit" value="Submit"><i class="fa fa-send"></i> Enviar</button>
+              </div>
+              <button href="{{ base_url() }}/app/system/mensagem" class="btn btn-default" ><i class="fa fa-times"></i> Cancelar</button>
+            </div>
+            </form>
+            <!-- /.box-footer -->
+          </div>
+          <!-- /. box -->
+        </div>    
+
+
+    </div>     
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ base_url() }}/libs/select2/select2.full.min.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/libs/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>  	 
+<script>
+$(function () {
+    $('.select2').select2();
+    $("#compose-textarea").wysihtml5();
+  });
+</script>
+
+{% endblock %}

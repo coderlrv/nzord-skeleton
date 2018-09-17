@@ -1,0 +1,53 @@
+{% extends "layout.html.twig" %}
+{% from 'base/forms.twig' import input as input_field, textarea, select, button %}
+{% from 'base/grid.twig' import grid %}
+
+{% block page_title %}
+    <h1 title="Parametros">
+    	<i class="fa fa-cogs"></i> Parametros
+    	{% if not pageDescri is empty  %}
+    	<small>{{pageDescri}}</small>
+    	{% endif %}
+    </h1>
+{% endblock %}
+
+{% block content %}
+{{ input_field('psq_id', null, null, 'id do Parametro', null ,1 ) }}
+{{ grid( 'tabela', parametro,true ) }}
+
+<menu id="html5menu" style="display: none" type="context">
+	<command label="Editar" icon="fa-pencil" onclick="getEdit()"></command>
+	<command label="Detalhar" icon="fa-eye" onclick="visual()"></command>
+</menu>
+{% endblock %}
+
+{% block scripts %}
+{% if parametro %}
+{% from 'base/grid.twig' import grid, gridSripts, ctMenuSripts %}
+{{ gridSripts('tabela',[
+                    {'label':'<i class="fa fa-files-o"></i> Novo','link':"novo()" }
+                ],
+                base_url()~'/app/system/parametro/gridJson?params='~params,parametro 
+            ) }}
+{{ ctMenuSripts( 'html5menu' ) }}
+{% endif %}
+
+<script>
+    function visual(){
+    	sysModalBoxJs('Parametros','app/system/parametro/det',true,'mdlParametro',null);
+    }
+    function getEdit(){
+    	sysModalBoxJs('Editar Parametro','app/system/parametro/form',true,'mdlParametro',null);
+    }	
+    function novo(){
+    	sysModalBoxJs('Novo Parametro','app/system/parametro/form',false,'mdlParametro',null);
+    }
+    function onExitModal(){
+    	$('#dtb_tabela').DataTable().draw();
+    }
+    $('select').on( 'change', function () {
+    	$('.table').DataTable().search( $(this).val(), true, false ).draw();
+    	$(this).val('');
+    });	   							
+</script>
+{% endblock %}

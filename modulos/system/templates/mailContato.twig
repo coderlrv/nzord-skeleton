@@ -1,0 +1,94 @@
+{% extends "layout.html.twig" %}
+{% block title %} {{ url.modulo }} {% endblock %}
+
+{% block head %} 
+<style>
+.box-body .nav>li>a {
+    position: relative !important;
+    display: block !important;
+    padding: 10px 15px !important;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 8px !important;
+    line-height: 1.42857143 !important;
+    vertical-align: top !important;
+    border-top: 1px solid #ddd !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+    {% from 'base/mail.twig' import menuMail %}
+	{{ menuMail( qtde ) }}  
+	   
+        <!-- /.col -->
+        <div class="col-md-9">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">Contatos</h3>
+
+              <div class="box-tools pull-right">
+                <div class="has-feedback">
+                  <input type="text" class="form-control input-sm" placeholder="Busca rápida" id="pesquisar">
+                  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <div class="table-responsive mailbox-messages">
+                <table class="table table-hover table-striped">
+                  <tbody>
+                     {% for row in contatos %}
+                      <tr onclick="location.href='{{ base_url() }}/app/system/mensagem/nova/{{ row.id }}'" >
+                        <td>{{ row.id }}</td>
+                        <td><b>{{ row.dpto }}</b> | {{ row.setor }}</td>
+                        <td>{{ row.nome}}</td>
+                        <td>{{ row.login }}</td>
+                        <td class="text-right">{{ row.status|raw }}</td>
+                      </tr>                    
+                    {% endfor %}                
+                  </tbody>
+                </table>
+                <!-- /.table -->
+              </div>
+              <!-- /.mail-box-messages -->
+            </div>
+            <!-- /.box-body -->
+            </div>
+          </div>
+          <!-- /. box -->
+        </div>    
+
+
+    </div>     
+{% endblock %}
+
+{% block scripts %}	
+<script type="text/javascript" src="{{ base_url() }}/js/searchTable.js"></script>    
+<script>
+  $(function () {    
+    //Handle starring for glyphicon and font awesome
+    $(".mailbox-star").click(function (e) {
+      e.preventDefault();
+      //detect type
+      var $this = $(this).find("a > i");
+      var glyph = $this.hasClass("glyphicon");
+      var fa = $this.hasClass("fa");
+
+      //Switch states
+      if (glyph) {
+        $this.toggleClass("glyphicon-star");
+        $this.toggleClass("glyphicon-star-empty");
+      }
+
+      if (fa) {
+        $this.toggleClass("fa-star");
+        $this.toggleClass("fa-star-o");
+      }
+    });
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "layout.html.twig" %}
+
+{% from 'base/forms.twig' import input as input_field, textarea, select, button %}
+{% from 'base/grid.twig' import grid %}
+
+{% block page_title %}
+	<h1 title="Acesso aos logs do sistema.">
+        <i class="fa fa-cogs"></i> SysLogs
+        {% if not pageDescri is empty  %}
+            <small>{{pageDescri}}</small>
+        {% endif %}
+    </h1>
+{% endblock %}
+
+{% block content %}
+    <div class="col-xs-12">
+        {% include 'base/message.twig' %}
+    </div>
+
+    {{ grid('tabelaLogs', logs ,true) }}
+    
+    <menu id="html5menu" style="display:none" type="context">
+        <command label="Detalhe" icon="fa-info-circle" onclick=""></command>
+    </menu>
+{% endblock %}
+
+{% block scripts %}
+    {% from 'base/grid.twig' import gridSripts, ctMenuSripts %}
+
+    {# Grid JS #}
+    {{ gridSripts('tabelaLogs',[
+                {'label':'<i class="fa fa-chevron-left"></i> Voltar','link':'window.location="'~path_for_model('system')~'"' },
+                {'label':'<i class="fa fa-sign-in"></i> Logs Login','link':'logsLogin()' }
+            ],
+            path_for_model('system','log','grid-json'), logs)}}
+
+    {# Menu Suspenso #}
+    {{ ctMenuSripts( 'html5menu' ) }}
+
+    <script>
+        function logsLogin(){
+            sysAction("{{path_for_model('system','log-login')}}")
+        }
+    </script>
+{% endblock %}

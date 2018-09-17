@@ -1,0 +1,78 @@
+{% extends "layout.html.twig" %}
+{% from 'base/forms.twig' import input as input_field, textarea, select, button %}
+{% from 'base/grid.twig' import grid %}
+
+{% block page_title %}
+    <h1 title="Usuarios">
+    	<i class="fa fa-users"></i> Usuários
+    	{% if not pageDescri is empty  %}
+    	<small>{{pageDescri}}</small>
+    	{% endif %}
+    </h1>
+{% endblock %}
+
+{% block content %}
+{{ input_field('psq_id', null, null, 'id do Usuário', null ,1 ) }}
+{{ grid( 'tabela', usuarios,true ) }}
+
+<menu id="html5menu" style="display: none" type="context">
+	<command label="Editar" icon="fa-pencil" onclick="getEdit()"></command>
+	<command label="Detalhar" icon="fa-eye" onclick="getDet()"></command>
+</menu>
+{% endblock %}
+
+{% block scripts %}
+{% if usuarios %}
+{% from 'base/grid.twig' import grid, gridSripts, ctMenuSripts %}
+{{ gridSripts('tabela',[
+                    {'label':'Novo','link':"novo()" }
+                ],
+                base_url()~'/app/system/usuario/gridJson?params='~params,usuarios 
+            ) }}
+{{ ctMenuSripts( 'html5menu' ) }}
+{% endif %}
+<script>
+	function dadosAD() {
+		sysModalBoxJs('Resumo dos Dados',
+				'funcoes/xxxPagDin.mdl.php?cl=FNCGeral&fct=ADUser', true, 'xxx');
+	}
+	function extras() {
+		sysModalBoxJs('Acessos Extras em outros sistemas',
+				'app/system/usuario/ref', true, 'xxx');
+	}
+	function getEdit() {
+		sysModalBoxJs('Editar Usuário', 'app/system/usuario/form', true,
+				'mdlUsuario');
+	}
+	function getDet() {
+		sysModalBoxJs('Editar Usuário', 'app/system/usuario/det', true,
+				'mdlUsuario');
+	}
+	function novo() {
+		sysModalBoxJs('Novo Usuário', 'app/system/usuario/form', false,
+				'mdlUsuario', null);
+	}
+	function getSituacao() {
+		sysModalBoxJs('Validar Usuarios no AD.',
+				'".MOD_CUR."function/valUsuario.mdl.php?act=geral', false,
+				'mdlUser');
+	}
+
+	function getIdEdita(id) {
+		var id = $('#pesq_id').val();
+		if (id != '') {
+			sysModalBoxJs(
+					'Editar Usuário',
+					'app/system/usuario/edit',
+					true, 'mdlUser');
+		}
+	}
+	function onExitModal() {
+		$('#dtb_tabela').DataTable().draw();
+	}
+	$('select').on('change', function() {
+		$('.table').DataTable().search($(this).val(), true, false).draw();
+		$(this).val('');
+	});
+</script>
+{% endblock %}

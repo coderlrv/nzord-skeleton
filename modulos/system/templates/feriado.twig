@@ -1,0 +1,49 @@
+{% extends "layout.html.twig" %}
+{% from 'base/forms.twig' import input as input_field, textarea, select, button %}
+{% from 'base/grid.twig' import grid %}
+
+{% block page_title %}
+    <h1 title="Feriado">
+    	<i class="fa fa-calendar"></i> Feriado
+    	{% if not pageDescri is empty  %}
+    	<small>{{pageDescri}}</small>
+    	{% endif %}
+    </h1>
+{% endblock %}
+
+{% block content %}
+{{ input_field('psq_id', null, null, 'id do Feriado', null ,1 ) }}
+{{ grid( 'tabela', feriado,true ) }}
+
+<menu id="html5menu" style="display: none" type="context">
+	<command label="Editar" icon="fa-pencil" onclick="getEdit()"></command>
+</menu>
+{% endblock %}
+
+{% block scripts %}
+{% if feriado %}
+{% from 'base/grid.twig' import grid, gridSripts, ctMenuSripts %}
+{{ gridSripts('tabela',[
+                    {'label':'<i class="fa fa-files-o"></i> Novo','link':"novo()" },
+                    {'label':'<i class="fa fa-refresh"></i> Importa','link':"importaPes()" }
+                ],
+                base_url()~'/app/system/feriado/gridJson?params='~params,feriado 
+            ) }}
+{{ ctMenuSripts( 'html5menu' ) }}
+{% endif %}
+
+<script>
+    function getEdit(){
+    	sysModalBoxJs('Editar Pessoa','app/system/feriado/form',true,'mdlFeriado',null);
+    }
+    function importaPes(){
+    	sysModalBoxJs('Importar Feriados - Ponto','app/system/feriado/importFeriado',false,'mdlImportaFer',null);
+    }	
+    function novo(){
+    	sysModalBoxJs('Novo Pessoa','app/system/feriado/form',false,'mdlFeriado',null);
+    }
+    function onExitModal(){
+    	$('#dtb_tabela').DataTable().draw();
+    }   							
+</script>
+{% endblock %}

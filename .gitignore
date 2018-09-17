@@ -1,0 +1,7 @@
+vendor/
+doc/
+public/assets/
+.settings/
+.project
+.vscode/
+settings.php
