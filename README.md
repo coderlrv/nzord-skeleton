@@ -27,8 +27,6 @@ $ composer server
 ```
 
 
-
-
 Altere as configurações de conexões do banco de dados no arquivo `base/settings.php`
 
 #####  Atenção
@@ -39,10 +37,10 @@ Definir a permissão de gravação para as pastas `base/tmp` e` files` ao implan
 ##### Diretórios
 * `base`: Código de aplicação
 * `files`: Diretório gravável dos arquivos jpg, png, pdf, bmp...
-* `modulos`: Todos os Modulos utilizados pelo sistema
-    - `system`: Módulo obrigátorio para funcionamento do nzord. Inclue Gerenciamento de Usuários,Logs,Relatórios,Setor,Organização, Paramentros entre outros..
+* `modulos`: Todos os modulos utilizados pelo sistema
+    - `system`: Módulo obrigatório para funcionamento do nzord. Inclue gerenciamento de Usuários,Logs,Relatórios,Setor,Organização, Paramentros entre outros..
 * `public`: Raiz do webserver
-* `vendor`: Composer dependencias
+* `vendor`: Composer dependências
 
 
 ##### Twig
