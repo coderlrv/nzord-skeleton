@@ -1,2 +1,5 @@
 *
+!cache
+!logs
+!sessions
 !.gitignore
