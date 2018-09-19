@@ -46,7 +46,8 @@
         "servocoder/richfilemanager-php": "^1.2.3",
         "bower-asset/rich-filemanager": "^2.7",
         "preflrv/nzord": "@dev",
-        "npm-asset/eonasdan-bootstrap-datetimepicker": "^4.17"
+        "npm-asset/eonasdan-bootstrap-datetimepicker": "^4.17",
+        "npm-asset/ionicons": "^4.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",

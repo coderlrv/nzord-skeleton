@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7315d64d0ef463892ca4dbc4666e1bd",
+    "content-hash": "93ef180dd7de70fc893fd61448ece1dd",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -1615,6 +1615,20 @@
             "type": "npm-asset",
             "license": [
                 "https://www.highcharts.com/license"
+            ]
+        },
+        {
+            "name": "npm-asset/ionicons",
+            "version": "4.4.3",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/ionicons/-/ionicons-4.4.3.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
             ]
         },
         {
