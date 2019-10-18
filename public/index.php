@@ -32,9 +32,13 @@ if (PHP_SAPI == 'cli-server' && $_SERVER['SCRIPT_FILENAME'] !== __FILE__) {
 
 $starttime = microtime(true);
 
-// Carrega todas dependencias composer
-require '../vendor/autoload.php';
-
-$setting = require '../base/settings.php';
-$app = new \NZord\App($setting);
-$app->run();
+if( @!file_exists('../base/settings.php') ){
+    echo '<center><h3>Arquivo de configuração não encontado! <br>Sistema não pode ser carregado!</h3></center>';
+    exit();
+}else{    
+    // Carrega todas dependencias composer
+    require '../vendor/autoload.php';
+    $setting = require '../base/settings.php';
+    $app = new \NZord\App($setting);
+    $app->run();
+}

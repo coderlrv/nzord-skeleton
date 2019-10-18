@@ -79,7 +79,6 @@ Definir a permissão de gravação para as pastas `base/tmp` e` files` ao implan
 ##### Modal
     
 
-
 ##### Test unitários e integração.
 *  Diretorios para arquivos de testes.
     -   `base\tests\unit`: Pasta teste unitários

@@ -8,6 +8,7 @@ return [
 	    'determineRouteBeforeAppMiddleware' => true,
 	    'displayErrorDetails' => true,
 		'app' => [
+		    'base_url'  => 'http://SERVER/SISTEMA/public',
 		    'asset_path'=> __DIR__ . '/resources',
 		    'error_log' => __DIR__ . "/logs/error.log",
 			'language' 	=> "pt_BR",
@@ -19,6 +20,7 @@ return [
 		'logger' => [
 			'name' => 'nzord',
 			'path' => __DIR__ . '/tmp/logs/' . date('Y-m-d') . '.log',
+			'path_tmp' => __DIR__ . '/tmp',
 		],
 		'render' => [
 		    'template_path' => __DIR__ . '/templates/',
@@ -26,10 +28,10 @@ return [
 		],
         'db' => [
             'driver'    => 'mysql',
-            'host'      => '',
-            'database'  => '',
-            'username'  => '',
-            'password'  => '',
+            'host'      => 'SERVER_DB',
+            'database'  => 'DATABASE',
+            'username'  => 'USERNAME',
+            'password'  => 'PASS',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -57,6 +59,15 @@ return [
 				'debug' => true,
 				'auto_reload' => true,
 			],
+		],
+		'auth' => [
+			'useAD' => fasle
+		],
+		'files' => [
+			'path' =>__DIR__.'/../files/',
+			'pathPublic' => __DIR__.'/../public/files',
+			'pathPublicImages' => __DIR__.'/../public/files/uploads/images',
+			'uriPublicImages' => '/files/uploads/images'
 		]
     ]
 ];
